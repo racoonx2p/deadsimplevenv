@@ -1,0 +1,17 @@
+pip_modules:
+  - pip
+  - setuptools
+  - wheel
+  - black
+  - pylint
+  - commitizen
+user:
+  username: myuser
+  fullname: John Doe
+  email: jonhy@doe.me
+license: MIT
+devops:
+  platform: github
+  url:  https://github.com
+  token: th1sIsS3CR3Tt0k3n
+  private_visibility: True
