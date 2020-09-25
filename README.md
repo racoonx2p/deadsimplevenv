@@ -60,11 +60,12 @@ You need to specify [gitlab](https://docs.gitlab.com/ee///////user/profile/perso
 
 ## Options
 
+|                                    |                             |
+| ---------------------------------- | --------------------------- |
 | -p, --project PATH                 | Project name                |
 | -d, --description TEXT             | Brief project description   |
 | -u, --username TEXT                | Your username               |
 | -n, --name TEXT                    | Your full name              |
-| Options:                           |                             |
 | -e, --email TEXT                   | Your email adress           |
 | -l, --license [MIT\|GNU\|EMPTY]    | Project license             |
 | --devops_platform [github\|gitlab] | Your devops platform        |
