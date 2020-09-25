@@ -4,12 +4,4 @@ pip_modules:
   - wheel
   - black
   - pylint
-# user:
-#   username:
-#   fullname:
-#   email:
-license: EMPTY
-devops:
-  platform: github
-  url: https://github.com
-  #group:
+  - commitizen
