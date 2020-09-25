@@ -2,7 +2,7 @@
 
 > Simple wrapper for python venv
 
-If you want to automate python project structure creation and great projects as [POETRY](https://python-poetry.org/) are too heavy for you or cannot be used in your envinronment, you can try **deadsimplevenv**. It does not add anything special and it stucks with basic python setuptools 🛠.
+If you want to automate python project structure creation and great projects as [POETRY](https://python-poetry.org/) cannot be used in your envinronment, you can try **deadsimplevenv**. It does not add anything special and it stucks with basic python setuptools 🛠.
 
 ## How to use
 
@@ -60,27 +60,25 @@ You need to specify [gitlab](https://docs.gitlab.com/ee///////user/profile/perso
 
 ## Options
 
-| Options:                           |                             |                 |     |     |
-| ---------------------------------- | --------------------------- | --------------- | --- | --- |
-| -p, --project PATH                 | Project name                |                 |     |     |
-| -d, --description TEXT             | Brief project description   |                 |     |     |
-| -u, --username TEXT                | Your username               |                 |     |     |
-| -n, --name TEXT                    | Your full name              |                 |     |     |
-| -e, --email TEXT                   | Your email adress           |                 |     |     |
-| -l, --license [MIT\|GNU\|EMPTY]    | Project license             |                 |     |     |
-| --devops_platform [github\|gitlab] |                             |                 |     |     |
-| Your devops platform               |                             |                 |     |     |
-| --devops_url TEXT                  | Your devops url             |                 |     |     |
-| --devops_group TEXT                | Your devops group           |                 |     |     |
-| --makerepo / --norepo              | Create repo in DEVOPS       | [default: True] |     |     |
-| --private / --public               | Create repo in DEVOPS       | [default: True] |     |     |
-| --help                             | Show this message and exit. |                 |     |     |
+| -p, --project PATH                 | Project name                |
+| -d, --description TEXT             | Brief project description   |
+| -u, --username TEXT                | Your username               |
+| -n, --name TEXT                    | Your full name              |
+| Options:                           |                             |
+| -e, --email TEXT                   | Your email adress           |
+| -l, --license [MIT\|GNU\|EMPTY]    | Project license             |
+| --devops_platform [github\|gitlab] | Your devops platform        |
+| --devops_url TEXT                  | Your devops url             |
+| --devops_group TEXT                | Your devops group           |
+| --makerepo / --norepo              | Create repo in DEVOPS       |
+| --private / --public               | Create repo in DEVOPS       |
+| --help                             | Show this message and exit. |
 
 ## Config file
 
 You can make your own config file in default config locations for each platform:
 
-- Other Unix: $XDG_CONFIG_HOME/app and ~/.config/app
-- OS X: ~/.config/app and ~/Library/Application Support/app
+- Other Unix: $XDG_CONFIG_HOME/app and ~/.config/deadsimplevenv
+- OS X: ~/.config/app and ~/Library/Application Support/deadsimplevenv
 
-Check example config in examples folder for possible parameters.
+Check [example config](https://github.com/racoonx2p/deadsimplevenv/blob/master/examples/example_config.yaml) in examples folder for possible parameters.
