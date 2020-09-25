@@ -14,35 +14,22 @@ import github
 import gitlab
 import git
 from urllib.parse import urlparse
+import questionary
 
 CONFIG = confuse.Configuration("deadsimplevenv", deadsimplevenv.__init__.__name__)
 
 
-class OptionPromptNull(click.Option):
-    _value_key = "_default_val"
+def validate_project_option(value):
+    if value is not None:
+        if Path(value).exists():
+            removeit = questionary.confirm(
+                f"Directory {value} exists, do you want to remove it?",
+            ).ask()
 
-    def get_default(self, ctx):
-        if not hasattr(self, self._value_key):
-            default = super(OptionPromptNull, self).get_default(ctx)
-            setattr(self, self._value_key, default)
-        return getattr(self, self._value_key)
-
-    def prompt_for_value(self, ctx):
-        default = self.get_default(ctx)
-
-        # only prompt if the default value is None
-        if default is None:
-            return super(OptionPromptNull, self).prompt_for_value(ctx)
-
-        return default
-
-
-def validate_project_option(ctx, param, value):
-    if Path(value).exists():
-        click.confirm(
-            f"Directory {value} exists already. Should I remove it?", abort=True
-        )
-        shutil.rmtree(Path(value))
+            if not removeit:
+                raise click.Abort()
+            else:
+                shutil.rmtree(Path(value))
     return value
 
 
@@ -50,87 +37,77 @@ def validate_project_option(ctx, param, value):
 @click.option(
     "-p",
     "--project",
-    prompt="Tell me your smashing project name",
     help="Project name",
     type=click.Path(exists=False),
-    callback=validate_project_option,
 )
 @click.option(
     "-d",
     "--description",
-    prompt="One line brief description of your project",
     help="Brief project description",
     type=str,
 )
 @click.option(
     "-u",
     "--username",
-    prompt="Your username",
     help="Your username",
-    cls=OptionPromptNull,
     default=CONFIG["user"]["username"].get(None),
     type=str,
 )
 @click.option(
     "-n",
     "--name",
-    prompt="Your full name",
     help="Your full name",
-    cls=OptionPromptNull,
     default=CONFIG["user"]["fullname"].get(None),
     type=str,
 )
 @click.option(
     "-e",
     "--email",
-    prompt="Your email",
     help="Your email adress",
-    cls=OptionPromptNull,
     default=CONFIG["user"]["email"].get(None),
     type=str,
 )
 @click.option(
     "-l",
     "--license",
-    prompt="Which license type you want to use",
     help="Project license",
-    cls=OptionPromptNull,
     default=CONFIG["license"].get(None),
     type=click.Choice(["MIT", "GNU", "EMPTY"]),
     show_default=True,
 )
 @click.option(
     "--devops_platform",
-    prompt="Choose your devops platform",
     help="Your devops platform",
-    cls=OptionPromptNull,
     default=CONFIG["devops"]["platform"].get(None),
     type=click.Choice(["github", "gitlab"]),
     show_default=True,
 )
 @click.option(
     "--devops_url",
-    prompt="Give me your devops url eg. https://github.com",
     help="Your devops url",
-    cls=OptionPromptNull,
     default=CONFIG["devops"]["url"].get(None),
     show_default=True,
 )
 @click.option(
     "--devops_group",
     help="Your devops group",
-    cls=OptionPromptNull,
     default=CONFIG["devops"]["group"].get(None),
     show_default=True,
 )
+@click.option("--makerepo", is_flag=True, help="Create repo in DEVOPS", default=False)
 @click.option(
-    "--makerepo/--norepo", default=True, help="Create repo in DEVOPS", show_default=True
+    "--norepo", is_flag=True, help="Do not create repo in DEVOPS", default=False
 )
 @click.option(
     "--private/--public",
     default=CONFIG["devops"]["private_visibility"].get(True),
     help="Create repo in DEVOPS",
     show_default=True,
+)
+@click.option(
+    "--token",
+    default=CONFIG["devops"]["token"].get(None),
+    help="DEVOPS token",
 )
 def cli(
     project,
@@ -143,16 +120,74 @@ def cli(
     devops_url,
     devops_group,
     makerepo,
+    norepo,
     private,
+    token,
 ):
     """You can load custom config from ~/.config/deadsimplevenv"""
+
+    project = (
+        questionary.text("Tell me your smashing project name:")
+        .skip_if(project is not None)
+        .ask()
+    )
+    validate_project_option(project)
+    project = Path(project)
+    description = (
+        questionary.text("One line brief description of your project:")
+        .skip_if(description is not None)
+        .ask()
+    )
+    username = questionary.text("Your username:").skip_if(username is not None).ask()
+    name = (
+        questionary.text("Your full name:", default=username)
+        .skip_if(name is not None)
+        .ask()
+    )
+    email = questionary.text("Your email address:").skip_if(email is not None).ask()
+    license = (
+        questionary.select(
+            "Which license type you want to use:",
+            choices=["MIT", "GNU", "EMPTY"],
+            default="EMPTY",
+        )
+        .skip_if(license is not None)
+        .ask()
+    )
+
+    devops_platform = (
+        questionary.select(
+            "Choose your devops platform:",
+            choices=["github", "gitlab"],
+            default="github",
+        )
+        .skip_if(devops_platform is not None)
+        .ask()
+    )
+    devops_url = (
+        questionary.autocomplete(
+            "Give me your devops url:",
+            choices=["https://github.com", "https://gitlab.com"],
+            default="https://github.com",
+        )
+        .skip_if(devops_url is not None)
+        .ask()
+    )
+
+    if not makerepo and not norepo:
+        makerepo = questionary.confirm("Create repo in DEVOPS:").ask()
+    elif norepo:
+        makerepo = False
+    if makerepo:
+        token = (
+            questionary.password("Your devops token:").skip_if(token is not None).ask()
+        )
 
     logging.debug(f"Used config {CONFIG.config_dir()}")
 
     config_handler.set_global(
         bar="filling", unknown="waves2", spinner="waves2", length=10
     )
-    project = Path(project)
 
     if project.exists():
         raise FileExistsError
