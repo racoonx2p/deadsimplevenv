@@ -2,7 +2,6 @@ import venv
 import click
 from pathlib import Path
 import confuse
-import sys
 import subprocess
 import deadsimplevenv.__init__
 import logging
@@ -214,7 +213,7 @@ def cli(
         makerepotasks = 0
     tasks = len(pip_modules) + makerepotasks + 2
     click.secho("\nMaking it virtual:", bold=True, fg="blue")
-    with alive_bar(tasks, calibrate=10) as bar:
+    with alive_bar(tasks, calibrate=6) as bar:
         bar.text(f"creating venv 👾")
         python_exe = create_venv_and_return_python_exe(project)
         bar()
@@ -230,7 +229,6 @@ def cli(
         clone_url = None
         if makerepo:
             bar.text("Making devops project 💥")
-            token = CONFIG["devops"]["token"].as_str()
             if devops_platform == "github":
                 url, clone_url = github_create_repo(
                     token, project.name, description, private
@@ -351,6 +349,7 @@ def main():
     )
     # pylint: disable=no-value-for-parameter
     cli()
+    
 
 
 if __name__ == "__main__":
