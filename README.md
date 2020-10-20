@@ -60,20 +60,28 @@ You need to specify [gitlab](https://docs.gitlab.com/ee///////user/profile/perso
 
 ## Options
 
-|                                    |                             |
-| ---------------------------------- | --------------------------- |
-| -p, --project PATH                 | Project name                |
-| -d, --description TEXT             | Brief project description   |
-| -u, --username TEXT                | Your username               |
-| -n, --name TEXT                    | Your full name              |
-| -e, --email TEXT                   | Your email adress           |
-| -l, --license [MIT\|GNU\|EMPTY]    | Project license             |
-| --devops_platform [github\|gitlab] | Your devops platform        |
-| --devops_url TEXT                  | Your devops url             |
-| --devops_group TEXT                | Your devops group           |
-| --makerepo / --norepo              | Create repo in DEVOPS       |
-| --private / --public               | Create repo in DEVOPS       |
-| --help                             | Show this message and exit. |
+```shell
+Usage: deadsimplevenv [OPTIONS]
+
+  You can load custom config from ~/.config/deadsimplevenv
+
+Options:
+  -p, --project PATH              Project name
+  -d, --description TEXT          Brief project description
+  -u, --username TEXT             Your username
+  -n, --name TEXT                 Your full name
+  -e, --email TEXT                Your email adress
+  -l, --license [MIT|GNU|EMPTY]   Project license
+  --devops_platform [github|gitlab]
+                                  Your devops platform
+  --devops_url TEXT               Your devops url
+  --devops_group TEXT             Your devops group
+  --makerepo                      Create repo in DEVOPS
+  --norepo                        Do not create repo in DEVOPS
+  --private / --public            Create repo in DEVOPS  [default: True]
+  --token TEXT                    DEVOPS token
+  --help                          Show this message and exit.
+```
 
 ## Config file
 
